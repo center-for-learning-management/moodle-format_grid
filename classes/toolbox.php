@@ -232,8 +232,12 @@ class toolbox {
         ];
         $fs->create_file_from_storedfile($displayedimagefilerecord, $sectionfile);
         $sectionimage->displayedimagestate++;
-        $DB->set_field('format_grid_image', 'displayedimagestate', $sectionimage->displayedimagestate,
-            ['sectionid' => $sectionid]);
+        $DB->set_field(
+            'format_grid_image',
+            'displayedimagestate',
+            $sectionimage->displayedimagestate,
+            ['sectionid' => $sectionid]
+        );
         return $sectionimage;
     }
 
@@ -409,7 +413,7 @@ class toolbox {
     private static function calculate_height($width, $ratio) {
         $basewidth = $width;
 
-        // Ratios 1 => '3-2', 2 => '3-1', 3 => '3-3', 4 => '2-3', 5 => '1-3', 6 => '4-3', 7 => '3-4'.
+        // Ratio codes are: 1 is 3-2, 2 is 3-1, 3 is 3-3, 4 is 2-3, 5 is 1-3, 6 is 4-3, 7 is 3-4.
         switch ($ratio) {
             case 1: // 3-2.
             case 2: // 3-1.
@@ -729,7 +733,20 @@ class toolbox {
                 $finalimage = imagecreate($targetwidth, $targetheight);
             }
 
-            if (!imagecopyresampled($finalimage, $original, 0, 0, 0, 0, $targetwidth, $targetheight, $originalwidth, $originalheight)) {
+            if (
+                !imagecopyresampled(
+                    $finalimage,
+                    $original,
+                    0,
+                    0,
+                    0,
+                    0,
+                    $targetwidth,
+                    $targetheight,
+                    $originalwidth,
+                    $originalheight
+                )
+            ) {
                 imagedestroy($finalimage);
                 imagedestroy($original);
                 unlink($filepath);
